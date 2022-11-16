@@ -1,8 +1,8 @@
 ![Chateau Logo](media/logo-full.svg)
 ## Chatroom and Threaded Comment Engine
 Ways to use it:
- - Deploy it on Heroku then iframe it.
- - Use it as a Go module in your server.
+ - Use the REST API with your own front end.
+ - Deploy the Docker image in your own server.
 
 ## Planned Features
  - Separate deploys for as chatroom or as threaded comments use
