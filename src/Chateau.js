@@ -4,6 +4,7 @@ export class Chateau {
     constructor(config) {
         this.context = config.context;
         this.commentsService = config.commentsService;
+        this.apiConfig = config.api;
     }
 
     getComments(query) {

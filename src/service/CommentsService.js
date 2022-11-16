@@ -22,7 +22,7 @@ class CommentsService {
     async postComment(comment) {
         if (isBlank(comment.content)) return { status: CommentErrorType.ContentMissing };
         const result = await this.repository.postComment(comment);
-        if (result.authorMissing) return { status: CommentErrorType.MissingAuthor };
+        if (result.authorMissing) return { status: CommentErrorType.AuthorMissing };
         else return { status: CommentErrorType.OK };
     }
 }

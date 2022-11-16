@@ -38,11 +38,25 @@ function checkContext(Chateau) {
     }
 }
 
+function setCommonHeaders(Chateau) {
+    return function(req, res, next) {
+        const fullhostname = req.get("Origin");
+        if (Chateau.apiConfig.cors.indexOf(fullhostname) != -1) {
+            res.set({
+                "Access-Control-Allow-Origin": fullhostname,
+                "Vary": "Origin",
+            });
+        }
+        next();
+    }
+}
+
 export function expressRouter(Chateau) {
     const router = new express.Router();
 
     router.use(bodyParser.urlencoded());
     router.use("/", checkContext(Chateau));
+    router.use("/", setCommonHeaders(Chateau));
     router.get("/comments", getComments(Chateau));
     router.post("/comments", multerUpload.none(), postComment(Chateau));
     return router;
