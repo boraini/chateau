@@ -28,13 +28,13 @@ class PostgreSQLCommentsRepository {
             postMissing: false,
         };
 
-        let postID = await this.connection.oneOrNone(`select id from post where postid = $1;`, query.postid, r => r.id);
+        let postID = await this.connection.oneOrNone(`select id from post where postid = $1;`, query.postid, r => r);
         result.postMissing = postID == null;
 
-        let authorID = await this.connection.oneOrNone(`select id from commentauthor where email = $1;`, query.hashedEmail, r => r.id);
+        let authorID = await this.connection.oneOrNone(`select id from commentauthor where email = $1;`, query.hashedEmail, r => r);
         result.authorMissing = authorID == null;
 
-        return [result, {postID, authorID}];
+        return [result, {postID: postID?.id, authorID: authorID?.id}];  
     }
 
     buildCommentHierarchy(table) {
@@ -90,7 +90,6 @@ class PostgreSQLCommentsRepository {
     }
 
     async putComment(comment, foundData) {
-        console.log(comment.Date);
         if (typeof comment.parentid == "string") {
             if (isBlank(comment.parentid)) {
                 comment.parentid = null;
@@ -114,18 +113,18 @@ class PostgreSQLCommentsRepository {
     async postComment(comment) {
         comment.hashedEmail = hasher.copy().update(comment.email).digest("hex");
 
-        console.dir(comment);
-
-        const [missingData, foundData] = await this.checkMissingData(comment);
+        const [missingData, foundData] = await this.checkMissingData(comment);     
 
         if (missingData.authorMissing) {
             if (!isBlank(comment.displayname)) {
-                foundData.authorID = this.putAuthor(comment);
+                foundData.authorID = await this.putAuthor(comment);
+                missingData.authorMissing = false;
             } else return missingData;
         }
 
         if (missingData.postMissing) {
-            foundData.postID = this.putPost(comment);
+            foundData.postID = await this.putPost(comment);
+            missingData.postMissing = false;
         }
 
         this.putComment(comment, foundData);

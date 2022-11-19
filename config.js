@@ -16,6 +16,9 @@ export default {
     repository: myCommentsRepository,
     commentsService: myCommentsService,
     context: process.env.CHATEAU_CONTEXT,
+    api: {
+        cors: ["https://boraini.com", "http://localhost:3000"],
+    },
 };
 
 //repository().getAllComments("///");
