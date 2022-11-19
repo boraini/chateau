@@ -17,7 +17,7 @@
     "multer": "^1.4.5-lts.1",
     "pg-promise": "^10.12.1"
   },
-  "devDependencies": {
+  "optionalDependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.2.0",
     "svelte": "^3.53.1",
     "svelte-preprocess": "^4.10.7",

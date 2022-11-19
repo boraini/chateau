@@ -1,10 +1,13 @@
-import Chateau from "./ChateauPrototype.svelte";
+import Chateau from "./Chateau.svelte";
 
 const chateau = new Chateau({
     target: document.getElementById("app"),
     props: {
-        apiURL: "http://localhost:5173",
-        postid: "///",
+        commentsInformation: {
+            apiURL: "http://localhost:5173",
+            postid: "///",
+        },
+        colorscheme: "light"
     }
 });
 

@@ -8,7 +8,10 @@ function getComments(Chateau) {
     return function(req, res) {
         const queryObj = req.query;
 
-        if (!("postid" in queryObj)) res.status(400).send("Chateau doesn't know what to get comments for.");
+        if (!("postid" in queryObj)) {
+            res.status(400).send("Chateau doesn't know what to get comments for.");
+            return;
+        }
 
         Chateau.getComments({
             postid: queryObj.postid
@@ -20,7 +23,10 @@ function postComment(Chateau) {
     return function(req, res) {
         const queryObj = req.body;
 
-        if (!("postid" in queryObj)) res.status(400).send("Chateau doesn't know what to post comment on.");
+        if (!("postid" in queryObj)) {
+            res.status(400).send("Chateau doesn't know what to post comment on.");
+            return;
+        }
 
         Chateau.postComment({
             postid: queryObj.postid,
