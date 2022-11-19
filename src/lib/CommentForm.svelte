@@ -2,14 +2,20 @@
     <input name="postid" type="hidden" value={commentsInformation.postid} />
     <input name="parentid" type="hidden" value={parentid == -1 ? "" : parentid} />
     <p>{ header }</p>
-    <p>Name: </p>
-    <input name="displayname" type="text" />
-    <p>Email: </p>
-    <input name="email" type="email" value="aaa@bbb.xyz" />
-    <p>{#if parentid == -1}Comment: {:else}Reply: {/if}</p>
-    <textarea name="content"></textarea>
-    <input type="submit" value="Submit" />
-    <input type="button" value="Cancel" on:click={cancelForm}/>
+    <p>
+    <label for="chateau-displayname">Name: </label>
+    <input id="chateau-displayname" name="displayname" type="text" />
+    </p>
+    <p>
+    <label for="chateau-email">Email (hashed before storage and used to identify different comments as of the same person): </label>
+    <input id="chateau-email" name="email" type="email" value="aaa@bbb.xyz" />
+    </p>
+    <p>
+    <label for="cheateau-content">{#if parentid == -1}Comment: {:else}Reply: {/if}</label>
+    <textarea id="chateau-content" name="content"></textarea>
+    </p>
+    <p><input type="submit" value="Submit" /></p>
+    <p><input type="button" value="Cancel" on:click={cancelForm}/></p>
 </form>
 
 <script>
@@ -20,6 +26,16 @@
     export let hasReplyFormID;
     export let header = "Post a comment";
     let commentForm;
+
+    function dispatchCommentFormSubmitted() {
+        const event  = new CustomEvent('chateaucommentposted', {
+            detail: {
+                content: 'comment form submitted'
+            }, 
+            bubbles: true
+        });
+        commentForm.dispatchEvent(event);
+    }
 
     function postComment(ev) {
         ev.preventDefault();
@@ -39,6 +55,7 @@
         } else {
             alert("Comment was posted successfully!");
             hasReplyFormID = -1;
+            dispatchCommentFormSubmitted();
         }
     }
 
@@ -48,7 +65,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     .comment-form {
         --bgcolor: hsl(calc(15deg * var(--comment-index)), 100%, 85%);
         display: block;
@@ -58,5 +75,14 @@
         padding: 0.1em 1em;
         border-radius: 0.8em;
         background-color: var(--bgcolor);
+    }
+
+    .comment-form textarea, .comment-form input {
+        display: block;
+        width: 100%;
+    }
+
+    .comment-form textarea {
+        resize: vertical;
     }
 </style>
